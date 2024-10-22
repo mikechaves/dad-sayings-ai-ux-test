@@ -90,7 +90,11 @@ function loadScenario(index) {
         questionPrompt.textContent = scenario.prompt;
         choiceButtons.forEach((button, i) => {
             button.textContent = scenario.choices[i];
+            button.setAttribute('aria-pressed', 'false');
         });
+
+        // Set focus to the first button for accessibility
+        choiceButtons[0].focus();
     } else {
         // All tests completed
         showConclusion();
@@ -101,20 +105,80 @@ function loadScenario(index) {
 function openModal(question) {
     feedbackQuestion.textContent = question;
     feedbackModal.style.display = 'block';
+    // Set focus to the textarea
+    feedbackResponse.focus();
+    // Trap focus inside the modal
+    trapFocus(feedbackModal);
 }
 
 // Function to close modal
 function closeModal(modalElement) {
     modalElement.style.display = 'none';
     feedbackResponse.value = ''; // Clear previous feedback
+    // Remove focus trap
+    removeTrapFocus();
 }
 
 // Function to show conclusion modal
 function showConclusion() {
     conclusionModal.style.display = 'block';
+    // Set focus to the close button
+    conclusionModal.querySelector('.close-button').focus();
+    // Trap focus inside the conclusion modal
+    trapFocus(conclusionModal);
 }
 
-// Handle choice button clicks
+// Function to trap focus within a modal
+let focusedElementBeforeModal;
+function trapFocus(modal) {
+    const focusableElementsString = 'a[href], area[href], input:not([disabled]), select:not([disabled]), ' +
+        'textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex="0"], ' +
+        '[contenteditable]';
+    const focusableElements = modal.querySelectorAll(focusableElementsString);
+    const firstFocusableElement = focusableElements[0];
+    const lastFocusableElement = focusableElements[focusableElements.length - 1];
+
+    // Save the element that was focused before the modal was opened
+    focusedElementBeforeModal = document.activeElement;
+
+    // Listen for and trap the focus
+    function handleFocus(event) {
+        if (event.key === 'Tab') {
+            if (event.shiftKey) { // Shift + Tab
+                if (document.activeElement === firstFocusableElement) {
+                    event.preventDefault();
+                    lastFocusableElement.focus();
+                }
+            } else { // Tab
+                if (document.activeElement === lastFocusableElement) {
+                    event.preventDefault();
+                    firstFocusableElement.focus();
+                }
+            }
+        } else if (event.key === 'Escape') { // Allow closing with Escape key
+            closeModal(modal);
+        }
+    }
+
+    modal.addEventListener('keydown', handleFocus);
+
+    // Store the handler to remove it later
+    modal.focusHandler = handleFocus;
+}
+
+// Function to remove focus trap
+function removeTrapFocus() {
+    if (feedbackModal.style.display === 'block') {
+        feedbackModal.removeEventListener('keydown', feedbackModal.focusHandler);
+        if (focusedElementBeforeModal) focusedElementBeforeModal.focus();
+    }
+    if (conclusionModal.style.display === 'block') {
+        conclusionModal.removeEventListener('keydown', conclusionModal.focusHandler);
+        if (focusedElementBeforeModal) focusedElementBeforeModal.focus();
+    }
+}
+
+// Function to handle choice button clicks
 choiceButtons.forEach(button => {
     button.addEventListener('click', () => {
         const choice = button.textContent;
@@ -126,6 +190,10 @@ choiceButtons.forEach(button => {
             selectedChoice: choice
         });
 
+        // Update aria-pressed
+        choiceButtons.forEach(btn => btn.setAttribute('aria-pressed', 'false'));
+        button.setAttribute('aria-pressed', 'true');
+
         // Open feedback modal
         openModal('Why did you choose this response?');
     });
@@ -135,11 +203,8 @@ choiceButtons.forEach(button => {
 closeButtons.forEach(button => {
     button.addEventListener('click', () => {
         // Determine which modal to close
-        if (button.closest('.modal') === feedbackModal) {
-            closeModal(feedbackModal);
-        } else if (button.closest('.modal') === conclusionModal) {
-            closeModal(conclusionModal);
-        }
+        const modal = button.closest('.modal');
+        closeModal(modal);
     });
 });
 
@@ -148,6 +213,7 @@ submitFeedbackButton.addEventListener('click', () => {
     const feedback = feedbackResponse.value.trim();
     if (feedback === '') {
         alert('Please provide your feedback before submitting.');
+        feedbackResponse.focus();
         return;
     }
 
@@ -157,12 +223,26 @@ submitFeedbackButton.addEventListener('click', () => {
     // Log responses to console (you can modify this to send to a server)
     console.log('Participant Responses:', responses);
 
+    // Optionally, send data to a server or form here
+
     // Close feedback modal
     closeModal(feedbackModal);
 
     // Increment test counter and load next scenario
     currentTest++;
     loadScenario(currentTest);
+});
+
+// Handle keyboard accessibility for modals
+window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        if (feedbackModal.style.display === 'block') {
+            closeModal(feedbackModal);
+        }
+        if (conclusionModal.style.display === 'block') {
+            closeModal(conclusionModal);
+        }
+    }
 });
 
 // Initial load

@@ -9,43 +9,43 @@
 <body>
     <div class="container">
         <!-- Animated Orb with Smiley Face -->
-        <div class="orb">
-            <span class="smiley">😊</span>
+        <div class="orb" role="img" aria-label="Smiley face indicating a friendly interaction">
+            <span class="smiley" aria-hidden="true">😊</span>
         </div>
 
         <!-- Question Prompt -->
         <h2 id="question-prompt">Things your dad would say when you need help around the house:</h2>
 
         <!-- Response Choices -->
-        <div class="choices">
-            <button class="choice-button" data-choice="A">
+        <div class="choices" role="group" aria-labelledby="question-prompt">
+            <button class="choice-button" data-choice="A" aria-pressed="false">
                 "Just tighten it a little more. It’s not rocket science."
             </button>
-            <button class="choice-button" data-choice="B">
+            <button class="choice-button" data-choice="B" aria-pressed="false">
                 "Let me show you how it's done. Safety first!"
             </button>
-            <button class="choice-button" data-choice="C">
+            <button class="choice-button" data-choice="C" aria-pressed="false">
                 "Why don’t you watch a video tutorial instead?"
             </button>
         </div>
     </div>
 
     <!-- Modal for Feedback -->
-    <div id="feedback-modal" class="modal">
+    <div id="feedback-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="feedback-question" aria-describedby="feedback-description">
         <div class="modal-content">
-            <span class="close-button">&times;</span>
+            <button class="close-button" aria-label="Close feedback modal">&times;</button>
             <p id="feedback-question">Why did you choose this response?</p>
-            <textarea id="feedback-response" rows="4" placeholder="Your feedback..."></textarea>
+            <textarea id="feedback-response" rows="4" placeholder="Your feedback..." aria-label="Feedback textarea"></textarea>
             <button id="submit-feedback">Submit</button>
         </div>
     </div>
 
     <!-- Modal for Conclusion -->
-    <div id="conclusion-modal" class="modal">
+    <div id="conclusion-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="conclusion-title" aria-describedby="conclusion-description">
         <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>Thank You!</h2>
-            <p>Thank you for participating in this activity. Your feedback is invaluable!</p>
+            <button class="close-button" aria-label="Close conclusion modal">&times;</button>
+            <h2 id="conclusion-title">Thank You!</h2>
+            <p id="conclusion-description">Thank you for participating in this activity. Your feedback is invaluable!</p>
         </div>
     </div>
 
