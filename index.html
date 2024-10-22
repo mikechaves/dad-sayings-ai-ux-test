@@ -14,7 +14,7 @@
         </div>
 
         <!-- Question Prompt -->
-        <h2>Things your dad would say when you need help around the house:</h2>
+        <h2 id="question-prompt">Things your dad would say when you need help around the house:</h2>
 
         <!-- Response Choices -->
         <div class="choices">
@@ -34,9 +34,18 @@
     <div id="feedback-modal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
-            <p id="feedback-question"></p>
+            <p id="feedback-question">Why did you choose this response?</p>
             <textarea id="feedback-response" rows="4" placeholder="Your feedback..."></textarea>
             <button id="submit-feedback">Submit</button>
+        </div>
+    </div>
+
+    <!-- Modal for Conclusion -->
+    <div id="conclusion-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Thank You!</h2>
+            <p>Thank you for participating in this activity. Your feedback is invaluable!</p>
         </div>
     </div>
 

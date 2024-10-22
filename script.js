@@ -1,48 +1,147 @@
 // script.js
 
-// Store participant responses
+// Array of scenarios
+const scenarios = [
+    {
+        prompt: "Things your dad would say when you need help around the house:",
+        choices: [
+            "Just tighten it a little more. It’s not rocket science.",
+            "Let me show you how it's done. Safety first!",
+            "Why don’t you watch a video tutorial instead?"
+        ]
+    },
+    {
+        prompt: "Things your dad would say when you're fixing a leaky faucet:",
+        choices: [
+            "Use some plumber's tape and see if that helps.",
+            "I’ve got the tools you need. Let me help you.",
+            "Isn’t there an app for that?"
+        ]
+    },
+    {
+        prompt: "Things your dad would say when you're assembling furniture:",
+        choices: [
+            "Make sure all the screws are tight.",
+            "I remember doing this when I was your age.",
+            "Why don’t you hire someone to do it?"
+        ]
+    },
+    {
+        prompt: "Things your dad would say when you're painting a room:",
+        choices: [
+            "Don’t forget to tape the edges properly.",
+            "I prefer using oil-based paints for durability.",
+            "Just throw some paint on and call it done."
+        ]
+    },
+    {
+        prompt: "Things your dad would say when you're mowing the lawn:",
+        choices: [
+            "Keep the mower level for an even cut.",
+            "Let me know if you need any help with the equipment.",
+            "Why don’t you let the neighbors handle it?"
+        ]
+    },
+    {
+        prompt: "Things your dad would say when you're fixing a car:",
+        choices: [
+            "Always disconnect the battery before starting.",
+            "I can teach you how to change a tire.",
+            "Why don’t you just take it to a mechanic?"
+        ]
+    },
+    {
+        prompt: "Things your dad would say when you're gardening:",
+        choices: [
+            "Water the plants early in the morning.",
+            "Let me show you how to prune those bushes.",
+            "Why don’t you buy pre-planted flowers?"
+        ]
+    },
+    {
+        prompt: "Things your dad would say when you're fixing a jammed garbage disposal:",
+        choices: [
+            "Always turn off the power before reaching in.",
+            "I can walk you through the steps.",
+            "Why don’t you just call a professional?"
+        ]
+    }
+];
+
+// Variables to track progress and responses
+let currentTest = 0;
+const totalTests = scenarios.length;
 let responses = [];
 
 // Get elements
+const questionPrompt = document.getElementById('question-prompt');
 const choiceButtons = document.querySelectorAll('.choice-button');
-const modal = document.getElementById('feedback-modal');
-const closeButton = document.querySelector('.close-button');
+const feedbackModal = document.getElementById('feedback-modal');
+const conclusionModal = document.getElementById('conclusion-modal');
+const closeButtons = document.querySelectorAll('.close-button');
 const feedbackQuestion = document.getElementById('feedback-question');
 const submitFeedbackButton = document.getElementById('submit-feedback');
 const feedbackResponse = document.getElementById('feedback-response');
 
-// Current choice
-let currentChoice = {};
+// Function to load a scenario
+function loadScenario(index) {
+    if (index < totalTests) {
+        const scenario = scenarios[index];
+        questionPrompt.textContent = scenario.prompt;
+        choiceButtons.forEach((button, i) => {
+            button.textContent = scenario.choices[i];
+        });
+    } else {
+        // All tests completed
+        showConclusion();
+    }
+}
 
 // Function to open modal with a specific question
 function openModal(question) {
     feedbackQuestion.textContent = question;
-    modal.style.display = 'block';
+    feedbackModal.style.display = 'block';
 }
 
 // Function to close modal
-function closeModal() {
-    modal.style.display = 'none';
+function closeModal(modalElement) {
+    modalElement.style.display = 'none';
     feedbackResponse.value = ''; // Clear previous feedback
+}
+
+// Function to show conclusion modal
+function showConclusion() {
+    conclusionModal.style.display = 'block';
 }
 
 // Handle choice button clicks
 choiceButtons.forEach(button => {
     button.addEventListener('click', () => {
-        const choice = button.getAttribute('data-choice');
-        const responseText = button.textContent;
+        const choice = button.textContent;
 
         // Store the choice
-        currentChoice = { choice, responseText };
-        responses.push(currentChoice);
+        responses.push({
+            testNumber: currentTest + 1,
+            prompt: scenarios[currentTest].prompt,
+            selectedChoice: choice
+        });
 
         // Open feedback modal
         openModal('Why did you choose this response?');
     });
 });
 
-// Handle close button click
-closeButton.addEventListener('click', closeModal);
+// Handle close button clicks for all modals
+closeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        // Determine which modal to close
+        if (button.closest('.modal') === feedbackModal) {
+            closeModal(feedbackModal);
+        } else if (button.closest('.modal') === conclusionModal) {
+            closeModal(conclusionModal);
+        }
+    });
+});
 
 // Handle submit feedback
 submitFeedbackButton.addEventListener('click', () => {
@@ -52,18 +151,21 @@ submitFeedbackButton.addEventListener('click', () => {
         return;
     }
 
-    // Add feedback to current choice
-    currentChoice.feedback = feedback;
+    // Add feedback to the last response
+    responses[currentTest].feedback = feedback;
 
     // Log responses to console (you can modify this to send to a server)
     console.log('Participant Responses:', responses);
 
-    // Close modal
-    closeModal();
+    // Close feedback modal
+    closeModal(feedbackModal);
 
-    // Optionally, proceed to the next part of the test or thank the participant
-    alert('Thank you for your feedback!');
-    // Here you can redirect or reset the test
-    // For example, reset responses and allow re-taking the test
-    // responses = [];
+    // Increment test counter and load next scenario
+    currentTest++;
+    loadScenario(currentTest);
 });
+
+// Initial load
+window.onload = () => {
+    loadScenario(currentTest);
+};
