@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotional Connection Test</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Animated Orb with Smiley Face -->
+        <div class="orb">
+            <span class="smiley">😊</span>
+        </div>
+
+        <!-- Question Prompt -->
+        <h2>Things your dad would say when you need help around the house:</h2>
+
+        <!-- Response Choices -->
+        <div class="choices">
+            <button class="choice-button" data-choice="A">
+                "Just tighten it a little more. It’s not rocket science."
+            </button>
+            <button class="choice-button" data-choice="B">
+                "Let me show you how it's done. Safety first!"
+            </button>
+            <button class="choice-button" data-choice="C">
+                "Why don’t you watch a video tutorial instead?"
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal for Feedback -->
+    <div id="feedback-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <p id="feedback-question"></p>
+            <textarea id="feedback-response" rows="4" placeholder="Your feedback..."></textarea>
+            <button id="submit-feedback">Submit</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
