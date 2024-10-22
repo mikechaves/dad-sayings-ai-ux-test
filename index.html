@@ -5,28 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emotional Connection Test</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
     <div class="container">
-        <!-- Animated Orb with Smiley Face -->
-        <div class="orb" role="img" aria-label="Smiley face indicating a friendly interaction">
-            <span class="smiley" aria-hidden="true">😊</span>
+        <!-- Privacy Notice -->
+        <div class="privacy-notice">
+            <p>
+                By participating in this activity, you consent to the collection and analysis of your responses. 
+                Your data will be kept confidential and used solely for UX evaluation purposes.
+            </p>
+            <button id="accept-privacy">I Agree</button>
         </div>
 
-        <!-- Question Prompt -->
-        <h2 id="question-prompt">Things your dad would say when you need help around the house:</h2>
+        <!-- Main Content -->
+        <div class="main-content" style="display: none;">
+            <!-- Animated Orb with Smiley Face -->
+            <div class="orb" role="img" aria-label="Smiley face indicating a friendly interaction">
+                <span class="smiley" aria-hidden="true">😊</span>
+            </div>
 
-        <!-- Response Choices -->
-        <div class="choices" role="group" aria-labelledby="question-prompt">
-            <button class="choice-button" data-choice="A" aria-pressed="false">
-                "Just tighten it a little more. It’s not rocket science."
-            </button>
-            <button class="choice-button" data-choice="B" aria-pressed="false">
-                "Let me show you how it's done. Safety first!"
-            </button>
-            <button class="choice-button" data-choice="C" aria-pressed="false">
-                "Why don’t you watch a video tutorial instead?"
-            </button>
+            <!-- Progress Indicator -->
+            <div class="progress-indicator">
+                Test <span id="current-test">1</span> of <span id="total-tests">8</span>
+            </div>
+
+            <!-- Question Prompt -->
+            <h2 id="question-prompt">Things your dad would say when you need help around the house:</h2>
+
+            <!-- Response Choices -->
+            <div class="choices" role="group" aria-labelledby="question-prompt">
+                <button class="choice-button" data-choice="A" aria-pressed="false">
+                    "Just tighten it a little more. It’s not rocket science."
+                </button>
+                <button class="choice-button" data-choice="B" aria-pressed="false">
+                    "Let me show you how it's done. Safety first!"
+                </button>
+                <button class="choice-button" data-choice="C" aria-pressed="false">
+                    "Why don’t you watch a video tutorial instead?"
+                </button>
+            </div>
         </div>
     </div>
 

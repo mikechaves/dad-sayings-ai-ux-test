@@ -21,6 +21,42 @@ body {
     padding: 20px;
 }
 
+/* Privacy Notice Styling */
+.privacy-notice {
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+#accept-privacy {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #ffc107;
+    color: #856404;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#accept-privacy:hover,
+#accept-privacy:focus {
+    background-color: #e0a800;
+    outline: none;
+}
+
+/* Main Content Styling */
+.main-content {
+    /* Hidden by default, shown after privacy consent */
+}
+
+.progress-indicator {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #555;
+}
+
 /* Animated Orb */
 .orb {
     width: 150px;

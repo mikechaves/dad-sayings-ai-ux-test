@@ -1,5 +1,19 @@
 // script.js
 
+// Initialize Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyBzXrkGb1lm-yLeERu9D62EK4NDru8HLBs",
+    authDomain: "dad-sayings-ai-ux-test.firebaseapp.com",
+    projectId: "dad-sayings-ai-ux-test",
+    storageBucket: "dad-sayings-ai-ux-test.appspot.com",
+    messagingSenderId: "106688867459",
+    appId: "1:106688867459:web:0963afbbffe100361bbfb6",
+    measurementId: "G-XE703VC9XC"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 // Array of scenarios
 const scenarios = [
     {
@@ -74,6 +88,11 @@ const totalTests = scenarios.length;
 let responses = [];
 
 // Get elements
+const privacyNotice = document.querySelector('.privacy-notice');
+const acceptPrivacyButton = document.getElementById('accept-privacy');
+const mainContent = document.querySelector('.main-content');
+const currentTestSpan = document.getElementById('current-test');
+const totalTestsSpan = document.getElementById('total-tests');
 const questionPrompt = document.getElementById('question-prompt');
 const choiceButtons = document.querySelectorAll('.choice-button');
 const feedbackModal = document.getElementById('feedback-modal');
@@ -83,9 +102,13 @@ const feedbackQuestion = document.getElementById('feedback-question');
 const submitFeedbackButton = document.getElementById('submit-feedback');
 const feedbackResponse = document.getElementById('feedback-response');
 
+// Set total tests in progress indicator
+totalTestsSpan.textContent = totalTests;
+
 // Function to load a scenario
 function loadScenario(index) {
     if (index < totalTests) {
+        currentTestSpan.textContent = index + 1;
         const scenario = scenarios[index];
         questionPrompt.textContent = scenario.prompt;
         choiceButtons.forEach((button, i) => {
@@ -220,10 +243,14 @@ submitFeedbackButton.addEventListener('click', () => {
     // Add feedback to the last response
     responses[currentTest].feedback = feedback;
 
-    // Log responses to console (you can modify this to send to a server)
-    console.log('Participant Responses:', responses);
-
-    // Optionally, send data to a server or form here
+    // Save to Firestore
+    db.collection('participantResponses').add(responses[currentTest])
+        .then(() => {
+            console.log('Response successfully recorded!');
+        })
+        .catch((error) => {
+            console.error('Error recording response: ', error);
+        });
 
     // Close feedback modal
     closeModal(feedbackModal);
@@ -245,7 +272,9 @@ window.addEventListener('keydown', (event) => {
     }
 });
 
-// Initial load
-window.onload = () => {
+// Handle privacy consent
+acceptPrivacyButton.addEventListener('click', () => {
+    privacyNotice.style.display = 'none';
+    mainContent.style.display = 'block';
     loadScenario(currentTest);
-};
+});
